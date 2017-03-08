@@ -1,0 +1,65 @@
+/* Main styles
+============================================================================= */
+
+.interactive-architecture svg {
+  width: 100%;
+}
+
+/* Pop-up arrow box
+============================================================================= */
+
+.interactive-architecture .arrow-box {
+	position: absolute;
+	background: white;
+	border: 1px solid black;
+  border-radius: 3px;
+  width: 600px;
+  max-width: calc(100% - 2em);
+  box-shadow: 0px 0px 50px 8px rgba(0, 0, 0, 0.25);
+}
+
+.interactive-architecture .arrow-box:after,
+.interactive-architecture .arrow-box:before {
+	bottom: 100%;
+	left: 50%;
+	border: solid transparent;
+	content: ' ';
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+
+.interactive-architecture .arrow-box:after {
+	border-bottom-color: #68B400;
+	border-width: 10px;
+	margin-left: -10px;
+}
+
+.interactive-architecture .arrow-box:before {
+	border-bottom-color: black;
+	border-width: 12px;
+	margin-left: -12px;
+}
+
+.interactive-architecture .interactive-architecture-popup {
+  font-size: 90%;
+}
+
+.interactive-architecture .interactive-architecture-popup-contents {
+  max-height: 400px;
+  overflow: auto;
+	padding-bottom: 0;
+	padding: 1em;
+}
+
+.interactive-architecture .interactive-architecture-popup-link {
+	padding: 5px 20px;
+	background-color: #68B400;
+}
+
+.interactive-architecture .interactive-architecture-popup-link a,
+.interactive-architecture .interactive-architecture-popup-link a:hover {
+	color: black;
+}
+
