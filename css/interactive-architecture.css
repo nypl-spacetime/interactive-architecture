@@ -5,6 +5,15 @@
   width: 100%;
 }
 
+.interactive-architecture .interactive-architecture-popup-error {
+  color: red;
+}
+
+.interactive-architecture a:hover path {
+  stroke: #68B400;
+}
+
+
 /* Pop-up arrow box
 ============================================================================= */
 

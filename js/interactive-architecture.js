@@ -93,30 +93,38 @@ var iA = function () {
       return new Promise(function (resolve, reject) {
         var contents
         var apiUrl = 'https://api.github.com/repos/' + org + '/' + repo + '/readme'
-        var htmlStr = cache.getItem(apiUrl)
-// dslkjahdksahjfkasjhdfsdk fuhsd ifusdhgf isdufh sdiufhsd i
+        var data = cache.getItem(apiUrl)
 
-htmlStr = null
-        var errorMessage = 'GitHub repository not found, or repository does not contain a README file'
-
-        if (htmlStr) {
-          resolve(_this.fixRelativeLinks(org, repo, utils.fragmentFromString(htmlStr)))
-        } else if (htmlStr === '') {
-          reject(errorMessage)
+        if (data && data.success && data.htmlStr) {
+          resolve(_this.fixRelativeLinks(org, repo, utils.fragmentFromString(data.htmlStr)))
+        } else if (data && !data.success) {
+          reject(data.error)
         } else {
           d3.html(apiUrl)
             .header('Accept', 'application/vnd.github.VERSION.html')
             .get(function(err, html) {
-
-              // response
               if (err) {
-                console.log(JSON.parse(err.currentTarget.response))
+                var errorMessage = 'Error loading README file from GitHub API'
 
-                cache.setItem(apiUrl, '')
+                try {
+                  var response = JSON.parse(err.currentTarget.response)
+                  var status = err.currentTarget.status
+
+                  errorMessage = errorMessage + ': ' + response.message + ' (' + status + ')'
+                } catch (e) {
+                }
+
+                cache.setItem(apiUrl, {
+                  success: false,
+                  error: errorMessage
+                })
                 reject(errorMessage)
               } else {
                 htmlStr = new XMLSerializer().serializeToString(html)
-                cache.setItem(apiUrl, htmlStr)
+                cache.setItem(apiUrl, {
+                  success: true,
+                  htmlStr: htmlStr
+                })
                 resolve(_this.fixRelativeLinks(org, repo, html))
               }
             })
@@ -179,6 +187,8 @@ htmlStr = null
     },
 
     createPopup: function (svg, href, location, contents) {
+      this.hidePopup()
+
       this.currentPopupHref = href
 
       var parentNode = svg.parentNode
@@ -240,7 +250,7 @@ htmlStr = null
       this.currentPopupHref = undefined
     },
 
-    create: function (container, svg, userConfig) {
+    create: function (container, svgUrl, userConfig) {
       var _this = this
 
       var defaultConfig = {
@@ -257,7 +267,12 @@ htmlStr = null
 
       var config = Object.assign(defaultConfig, userConfig)
 
-      d3.xml('architecture.svg', function (err, doc) {
+      d3.xml(svgUrl, function (err, doc) {
+        if (err) {
+          console.error('Failed loading architecture diagram: ' + svgUrl)
+          return
+        }
+
         var svg = doc.querySelector('svg')
 
         // Set SVG height & width
