@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Interactive Architecture</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="http://spacetime.nypl.org/interactive-architecture/js/d3.v4.min.js" charset="utf-8"></script>
+  <script src="http://spacetime.nypl.org/interactive-architecture/js/interactive-architecture.js" charset="utf-8"></script>
+  <link rel="stylesheet" href="http://spacetime.nypl.org/interactive-architecture/css/interactive-architecture.css">
+  <link rel="stylesheet" href="http://spacetime.nypl.org/interactive-architecture/css/markdown-popup.css">
+</head>
+<body>
+  <header></header>
+  <article>
+    <p>
+      Example using diagram, using <a href="https://github.com/nypl-spacetime/interactive-architecture">interactive-architecture</a>.
+    </p>
+    <div id='architecture'>
+    </div>
+  <article>
+  <script>
+
+  var namespaces = {
+    gh: 'https://github.com/'
+  }
+
+  var config = {
+    getHref: function (link) {
+      return link.getAttribute('xl:href')
+    },
+    getStyle: function (href, link) {
+      return {
+        fill: 'rgba(255, 255, 255, 0)',
+        strokeWidth: '2px'
+      }
+    },
+    getPopupContents: function (href, link) {
+      if (href.indexOf(namespaces.gh) >= 0) {
+        return iA.gitHub.getReadme(href)
+      }
+    }
+  }
+
+  iA.architecture.create('#architecture', 'example.svg', config)
+  </script>
+</body>
+</html>
