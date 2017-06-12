@@ -258,8 +258,6 @@ var iA = function () {
         getHref: function (link) {
           return link.getAttribute('xl:href')
         },
-        getStyle: function (href, link) {
-        },
         getPopupContents: function (href, link) {
         },
         getBadgeNumber: function (href, link) {
@@ -305,15 +303,6 @@ var iA = function () {
         var links = svg.querySelectorAll('a')
         Array.prototype.forEach.call(links, function (link) {
           var href = config.getHref(link)
-
-          if (config.element) {
-
-          }
-
-          var blockElement = link.querySelector(config.element)
-          if (blockElement) {
-            Object.assign(blockElement.style, config.getStyle(href, link) || {})
-          }
 
           link.addEventListener('click', function (event) {
             event.stopPropagation()

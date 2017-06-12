@@ -22,6 +22,11 @@
       margin: 0 auto;
       max-width: 600px;
     }
+
+    .interactive-architecture a > path {
+      fill: white;
+      stroke-width: 2px;
+    }
   </style>
 </head>
 <body>
@@ -42,12 +47,6 @@
   var config = {
     getHref: function (link) {
       return link.getAttribute('xl:href')
-    },
-    getStyle: function (href, link) {
-      return {
-        fill: 'rgba(255, 255, 255, 0)',
-        strokeWidth: '2px'
-      }
     },
     getPopupContents: function (href, link) {
       if (href.indexOf(namespaces.gh) >= 0) {
