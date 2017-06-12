@@ -250,10 +250,11 @@ var iA = function () {
       this.currentPopupHref = undefined
     },
 
-    create: function (container, svgUrl, userConfig) {
+    create: function (container, svgUrl, userConfig, callback) {
       var _this = this
 
       var defaultConfig = {
+        element: 'path',
         getHref: function (link) {
           return link.getAttribute('xl:href')
         },
@@ -265,23 +266,27 @@ var iA = function () {
         }
       }
 
-      var config = Object.assign(defaultConfig, userConfig)
+      var config = Object.assign({}, defaultConfig, userConfig)
 
       d3.xml(svgUrl, function (err, doc) {
         if (err) {
           console.error('Failed loading architecture diagram: ' + svgUrl)
+          if (callback) {
+            callback(err)
+          }
+
           return
         }
 
         var svg = doc.querySelector('svg')
 
         // Set SVG height & width
-        svg.removeAttribute('height', null)
+        svg.removeAttribute('height')
 
         // Append SVG document to HTML
         var containerElement = document.querySelector(container)
 
-        containerElement.className += ' interactive-architecture'
+        containerElement.classList.add('interactive-architecture')
         containerElement.appendChild(doc.documentElement)
 
         // Remove all elements with white background (just leaving the outline)
@@ -301,8 +306,14 @@ var iA = function () {
         Array.prototype.forEach.call(links, function (link) {
           var href = config.getHref(link)
 
-          var path = link.querySelector('path')
-          Object.assign(path.style, config.getStyle(href, link) || {})
+          if (config.element) {
+
+          }
+
+          var blockElement = link.querySelector(config.element)
+          if (blockElement) {
+            Object.assign(blockElement.style, config.getStyle(href, link) || {})
+          }
 
           link.addEventListener('click', function (event) {
             event.stopPropagation()
@@ -337,6 +348,10 @@ var iA = function () {
             this.createBadge(svg, link, badgeNumber)
           }
         })
+
+        if (callback) {
+          callback()
+        }
       })
 
       document.addEventListener('click', function () {
